@@ -1,0 +1,42 @@
+# Your local time zone (does not affect data)
+# See https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+# for a list of all possible values.
+# The default is Beijing time zone +8
+Zone: 8 #If the Beijing time zone is UTC+8, fill in 8
+
+# Scheduled tasks use by default
+# Possible values: false, true
+cronTasks: true
+
+# The default timeframe (frequency of data retrieval).
+# Possible values: "1m", "5m", "15m", "1h", "1d".
+defaultTimeframe: "5m"  # Example: "5m"
+
+# The default price change threshold. Only pairs exceeding this value will be notified.
+# Here 1 is equivalent to 1%
+defaultThreshold: 1  # Example: 1
+
+# The file path containing trading pair symbols. If empty, pairs will be auto-retrieved.
+symbolsFilePath: "config/symbols.txt"  # Example: "config/symbols.txt"
+
+# Notification channels and configuration
+# The channels for receiving notifications. Currently supports Telegram and DingDing.
+notificationChannels: 
+  - "telegram"
+  - "dingding"
+
+# Telegram bot configuration
+# The token used to connect to the Telegram bot.
+telegram:
+  token: ""  # Example: "your_telegram_bot_token"
+  
+  # The Telegram chat ID where notifications will be sent.
+  chatId: ""  # Example: "your_chat_id"
+
+# DingDing robot configuration
+# The DingDing robot webhook URL for sending notifications.
+dingding:
+  webhook: ""  # Example: "https://oapi.dingtalk.com/robot/send?access_token=your_access_token"
+  
+  # The DingDing robot secret used to generate the signature for secure notifications.
+  secret: ""  # Example: "your_sign_secret"
