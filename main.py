@@ -50,7 +50,7 @@ def main():
             exchange = Exchange(ccxt.okx(),config['defaultThreshold'])
 
         # Run program
-        asyncio.run(periodic_task(symbols, exchange, config, config['defaultTimeframe']))
+        asyncio.run(periodic_task(symbols, exchange, config))
 
     except Exception as e:
         logging.error(f"An error occurred: {e}")

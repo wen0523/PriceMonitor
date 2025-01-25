@@ -9,16 +9,16 @@ from notifications.telegram import sendTelegramMessage
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 async def fetch_result(symbol, exchange, times, num):
-    await asyncio.sleep(0.2*num) # Prevent API access from being too frequent
+    await asyncio.sleep(0.3*num) # Prevent API access from being too frequent
     return await exchange.getResult(symbol, times['sinceCurrent'], times['sinceBefore'])
 
 # Asynchronous query
-async def main_async(symbols, exchange, config,times, timeFrame):
+async def main_async(symbols, exchange, config,times):
     try:
         tasks = [fetch_result(symbol, exchange, times, i) for i, symbol in enumerate(symbols)]
         results = await asyncio.gather(*tasks, return_exceptions=True)
 
-        message = f'Price changes in the past {timeFrame}:'
+        message = f"The price has changed by more than {config['defaultThreshold']}% in the past {config['defaultTimeframe']}:"
         write = False
         for result in results:
             if isinstance(result, Exception):
@@ -38,11 +38,10 @@ async def main_async(symbols, exchange, config,times, timeFrame):
         else:
             Log(f"{times['localTime']}  No price changes above threshold")
 
-        print(message)
     finally:
         await exchange.exchange.close()
 
-async def periodic_task(symbols, exchange, config, timeFrame):
+async def periodic_task(symbols, exchange, config):
     interval = parseTimeframe(config['queryInterval']) // 1000
     cronTasks = config['cronTasks']
 
@@ -51,7 +50,7 @@ async def periodic_task(symbols, exchange, config, timeFrame):
         while True:
             times = parseTime(config['Zone'],config['defaultTimeframe'])
             timeStart = datetime.now().timestamp()
-            await main_async(symbols, exchange, config,times, timeFrame)
+            await main_async(symbols, exchange, config,times)
             timeEnd = datetime.now().timestamp()
             time = timeEnd - timeStart
             if cronTasks:

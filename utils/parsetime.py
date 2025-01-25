@@ -7,8 +7,7 @@ def parseTime(zone, timeFrame):
         zoneTime = utcTime + timedelta(hours=zone)
         localTime = zoneTime.strftime("%Y-%m-%d %H:%M")
 
-        since = getSince(localTime)
-
+        since = getSince(utcTime.strftime("%Y-%m-%d %H:%M"))
         # Convert to millisecond timestamp for use in API requests
         sinceCurrent = int((since - 60) * 1000)
         sinceBefore = int(since * 1000 - parseTimeframe(timeFrame))
@@ -33,6 +32,7 @@ def parseTimeframe(timeframe):
 
 def getSince(localTime):
     time_format = "%Y-%m-%d %H:%M"
+    
     time = datetime.strptime(localTime, time_format)
     
     return int(time.timestamp())
