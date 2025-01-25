@@ -22,7 +22,7 @@ async def main_async(symbols, exchange, config,times, timeFrame):
         write = False
         for result in results:
             if isinstance(result, Exception):
-                Log(f'{times['localTime']}  Task failed：{result}')
+                Log(f"{times['localTime']}  Task failed：{result}")
                 logging.error(f"Task failed：{result}")
             else:
                 if result:
@@ -36,7 +36,7 @@ async def main_async(symbols, exchange, config,times, timeFrame):
             sendDingDingMessage(message, config['dingding']['webhook'], config['dingding']['secret'])
             Log(message+'\n')
         else:
-            Log(f'{times['localTime']}  No price changes above threshold')
+            Log(f"{times['localTime']}  No price changes above threshold")
 
         print(message)
     finally:
