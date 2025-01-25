@@ -54,7 +54,6 @@ async def periodic_task(symbols, exchange, config, timeFrame):
             await main_async(symbols, exchange, config,times, timeFrame)
             timeEnd = datetime.now().timestamp()
             time = timeEnd - timeStart
-            print(time)
             if cronTasks:
                 break
             await asyncio.sleep(interval - time)  # 等待指定的间隔时间

@@ -1,1 +1,4 @@
 /myvenv
+/exchanges/__pycache__
+/notifications/__pycache__
+/utils/__pycache__
