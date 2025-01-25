@@ -9,8 +9,9 @@ def parseTime(zone, timeFrame):
 
         since = getSince(localTime)
 
+        # Convert to millisecond timestamp for use in API requests
         sinceCurrent = int((since - 60) * 1000)
-        sinceBefore = int(since * 1000 - parseTimeframe(timeFrame))  # 转换为毫秒级时间戳，用于 API 请求
+        sinceBefore = int(since * 1000 - parseTimeframe(timeFrame))
         return {
             'sinceCurrent':sinceCurrent,
             'sinceBefore':sinceBefore,
@@ -19,6 +20,7 @@ def parseTime(zone, timeFrame):
     except TypeError as e:
         print(e)
 
+# Parse 'Timeframe' into milliseconds
 def parseTimeframe(timeframe):
     if timeframe.endswith("m"):
         return int(timeframe[:-1]) * 60 * 1000

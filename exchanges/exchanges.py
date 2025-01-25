@@ -3,6 +3,7 @@ class Exchange:
         self.exchange = exchange
         self.threshold = threshold
 
+    # Get the price through the exchange API and calculate the price change.
     async def getResult(self, symbol, sinceCurrent, sinceBefore):
         ohlcvCurrent = await self.exchange.fetch_ohlcv(symbol, '1m', sinceCurrent, limit=1)
         ohlcvBefore = await self.exchange.fetch_ohlcv(symbol, '1m', sinceBefore, limit=1)

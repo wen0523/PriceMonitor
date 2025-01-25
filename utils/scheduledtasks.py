@@ -12,6 +12,7 @@ async def fetch_result(symbol, exchange, times, num):
     await asyncio.sleep(0.2*num) # Prevent API access from being too frequent
     return await exchange.getResult(symbol, times['sinceCurrent'], times['sinceBefore'])
 
+# Asynchronous query
 async def main_async(symbols, exchange, config,times, timeFrame):
     try:
         tasks = [fetch_result(symbol, exchange, times, i) for i, symbol in enumerate(symbols)]
@@ -46,6 +47,7 @@ async def periodic_task(symbols, exchange, config, timeFrame):
     cronTasks = config['cronTasks']
 
     try:
+        # When 'cronTasks' is 'false', it is executed in a loop, otherwise it is executed once and exits.
         while True:
             times = parseTime(config['Zone'],config['defaultTimeframe'])
             timeStart = datetime.now().timestamp()

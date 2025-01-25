@@ -7,6 +7,7 @@ from utils.scheduledtasks import periodic_task
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
+# Get currency
 def loadSymbol(configPath='config/symbols.txt'):
     try:
         currency = []
@@ -18,6 +19,7 @@ def loadSymbol(configPath='config/symbols.txt'):
         logging.error(f"Failed to load symbol: {e}")
         raise
 
+# Load configuration file
 def loadConfig(configPath='config/config.yaml'):
     try:
         with open(configPath, 'r') as file:
@@ -41,21 +43,17 @@ def main():
             logging.error("No symbols found in the specified file.")
             return
         
+        # Determine exchange
         if config['exchange'] == 'binance':
             exchange = Exchange(ccxt.binance(),config['defaultThreshold'])
         else:
             exchange = Exchange(ccxt.okx(),config['defaultThreshold'])
 
+        # Run program
         asyncio.run(periodic_task(symbols, exchange, config, config['defaultTimeframe']))
-        # if message:
-        #     logging.info(f"Message to be sent:\n{message}")
-        #     sendNotifications(message, config['notificationChannels'], config.get('telegram', {}), config.get('dingding', {}))
-        # else:
-        #     logging.info("No price changes exceed the threshold.")
 
     except Exception as e:
         logging.error(f"An error occurred: {e}")
-    
-
+     
 if __name__ == "__main__":
     main()
