@@ -29,7 +29,7 @@ async def main_async(symbols, exchange, config,times, timeFrame):
                     write = True
                     message += result
         
-        message += f'\n{times['localTime']}'
+        message += f"\n{times['localTime']}"
         
         if write:
             sendTelegramMessage(message, config['telegram']['token'], config['telegram']['chatId'])
