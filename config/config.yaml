@@ -38,15 +38,15 @@ notificationChannels:
 # Telegram bot configuration
 # The token used to connect to the Telegram bot.
 telegram:
-  token: "7820507276:AAGKpVPgc4uJ7zd4SmrpZB6geu5aU4VylFo"  # Example: "your_telegram_bot_token"
+  token: ""  # Example: "your_telegram_bot_token"
 
   # The Telegram chat ID where notifications will be sent.
-  chatId: "-1002275845855"  # Example: "your_chat_id"
+  chatId: ""  # Example: "your_chat_id"
 
 # DingDing robot configuration
 # The DingDing robot webhook URL for sending notifications.
 dingding:
-  webhook: "https://oapi.dingtalk.com/robot/send?access_token=5b6aa267b4e3c954e995a3fc5286c540d4261b835eed754dabef2b933b4fb02a"  # Example: "https://oapi.dingtalk.com/robot/send?access_token=your_access_token"
+  webhook: ""  # Example: "https://oapi.dingtalk.com/robot/send?access_token=your_access_token"
 
   # The DingDing robot secret used to generate the signature for secure notifications.
-  secret: "SEC91b409df60966f4d122fe142d258045e0685fc270cca92247679ae41f3e2739f"  # Example: "your_sign_secret"
+  secret: ""  # Example: "your_sign_secret"
