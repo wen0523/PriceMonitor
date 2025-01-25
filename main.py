@@ -2,8 +2,7 @@ import ccxt.async_support as ccxt
 import asyncio
 import yaml
 import logging
-from exchanges.okx import OKX
-from utils.parsetime import parseTime
+from exchanges.exchanges import Exchange
 from utils.scheduledtasks import periodic_task
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -16,17 +15,18 @@ def loadSymbol(configPath='config/symbols.txt'):
                 currency.append(line.strip())
         return currency
     except Exception as e:
-        logging.error(f"Failed to load config: {e}")
+        logging.error(f"Failed to load symbol: {e}")
         raise
 
 def loadConfig(configPath='config/config.yaml'):
     try:
         with open(configPath, 'r') as file:
             config = yaml.safe_load(file)
-        required_keys = ['Zone', 'cronTasks', 'symbolsFilePath', 'defaultTimeframe', 'defaultThreshold', 'notificationChannels']
+        required_keys = ['exchange', 'Zone', 'cronTasks', 'queryInterval','symbolsFilePath', 'defaultTimeframe', 'defaultThreshold', 'notificationChannels']
         for key in required_keys:
             if key not in config:
                 raise ValueError(f"Missing required config key: {key}")
+
         return config
     except Exception as e:
         logging.error(f"Failed to load config: {e}")
@@ -41,11 +41,12 @@ def main():
             logging.error("No symbols found in the specified file.")
             return
         
-        okx = OKX(ccxt.okx(),config['defaultTimeframe'],config['defaultThreshold'])
+        if config['exchange'] == 'binance':
+            exchange = Exchange(ccxt.binance(),config['defaultThreshold'])
+        else:
+            exchange = Exchange(ccxt.okx(),config['defaultThreshold'])
 
-        times = parseTime(config['Zone'],config['defaultTimeframe'])
-
-        asyncio.run(periodic_task(symbols, okx, times, config['defaultTimeframe']))
+        asyncio.run(periodic_task(symbols, exchange, config, config['defaultTimeframe']))
         # if message:
         #     logging.info(f"Message to be sent:\n{message}")
         #     sendNotifications(message, config['notificationChannels'], config.get('telegram', {}), config.get('dingding', {}))
@@ -58,4 +59,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

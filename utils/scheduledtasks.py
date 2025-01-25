@@ -1,39 +1,60 @@
 import asyncio
 import logging
-import datetime
-from parsetime import parseTimeframe
+from datetime import datetime
+from utils.parsetime import parseTimeframe, parseTime
+from utils.log import Log
+from notifications.dingding import sendDingDingMessage
+from notifications.telegram import sendTelegramMessage
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-async def fetch_result(symbol, okx, times):
-    return await okx.getResult(symbol, times['since'])
+async def fetch_result(symbol, exchange, times, num):
+    await asyncio.sleep(0.2*num) # Prevent API access from being too frequent
+    return await exchange.getResult(symbol, times['sinceCurrent'], times['sinceBefore'])
 
-async def main_async(symbols, okx, times):
+async def main_async(symbols, exchange, config,times, timeFrame):
     try:
-        tasks = [fetch_result(symbol, okx, times) for symbol in symbols]
+        tasks = [fetch_result(symbol, exchange, times, i) for i, symbol in enumerate(symbols)]
         results = await asyncio.gather(*tasks, return_exceptions=True)
 
-        message = '价格变动：'
+        message = f'Price changes in the past {timeFrame}:'
+        write = False
         for result in results:
             if isinstance(result, Exception):
-                logging.error(f"任务失败：{result}")
+                Log(f'{times['localTime']}  Task failed：{result}')
+                logging.error(f"Task failed：{result}")
             else:
-                message += result
+                if result:
+                    write = True
+                    message += result
+        
+        message += f'\n{times['localTime']}'
+        
+        if write:
+            sendTelegramMessage(message, config['telegram']['token'], config['telegram']['chatId'])
+            sendDingDingMessage(message, config['dingding']['webhook'], config['dingding']['secret'])
+            Log(message+'\n')
+        else:
+            Log(f'{times['localTime']}  No price changes above threshold')
+
         print(message)
     finally:
-        await okx.exchange.close()
+        await exchange.exchange.close()
 
-async def periodic_task(symbols, okx, times, timeFrame):
-    interval = parseTimeframe(timeFrame) // 1000
-    
-    # 等待到指定开始时间
-    if start_time:
-        delay = (start_time - now).total_seconds()
-        if delay > 0:
-            print(f"等待 {delay} 秒，直到 {start_time}")
-            await asyncio.sleep(delay)
+async def periodic_task(symbols, exchange, config, timeFrame):
+    interval = parseTimeframe(config['queryInterval']) // 1000
+    cronTasks = config['cronTasks']
 
-    while True:
-        asyncio.run(main_async(symbols, okx, times))
-        await asyncio.sleep(interval)  # 等待指定的间隔时间
-        
+    try:
+        while True:
+            times = parseTime(config['Zone'],config['defaultTimeframe'])
+            timeStart = datetime.now().timestamp()
+            await main_async(symbols, exchange, config,times, timeFrame)
+            timeEnd = datetime.now().timestamp()
+            time = timeEnd - timeStart
+            print(time)
+            if cronTasks:
+                break
+            await asyncio.sleep(interval - time)  # 等待指定的间隔时间
+    except:
+        print('Task terminated') 

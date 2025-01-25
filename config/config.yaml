@@ -1,3 +1,8 @@
+# Configuration for the exchange and default behavior
+# The name of the exchange to connect to.
+# Possible values: "binance", "okx"
+exchange: "okx"  # Example: "binance
+
 # Your local time zone (does not affect data)
 # See https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 # for a list of all possible values.
@@ -6,7 +11,12 @@ Zone: 8 #If the Beijing time zone is UTC+8, fill in 8
 
 # Scheduled tasks use by default
 # Possible values: false, true
-cronTasks: true
+cronTasks: false
+
+# Query the interval for price changes
+# Note: This option will only take effect when cronTasks is ‘false’.
+# Possible values: "1m", "5m", "15m", "1h", "1d".
+queryInterval: "5m"
 
 # The default timeframe (frequency of data retrieval).
 # Possible values: "1m", "5m", "15m", "1h", "1d".
@@ -28,15 +38,15 @@ notificationChannels:
 # Telegram bot configuration
 # The token used to connect to the Telegram bot.
 telegram:
-  token: ""  # Example: "your_telegram_bot_token"
-  
+  token: "7820507276:AAGKpVPgc4uJ7zd4SmrpZB6geu5aU4VylFo"  # Example: "your_telegram_bot_token"
+
   # The Telegram chat ID where notifications will be sent.
-  chatId: ""  # Example: "your_chat_id"
+  chatId: "-1002275845855"  # Example: "your_chat_id"
 
 # DingDing robot configuration
 # The DingDing robot webhook URL for sending notifications.
 dingding:
-  webhook: ""  # Example: "https://oapi.dingtalk.com/robot/send?access_token=your_access_token"
-  
+  webhook: "https://oapi.dingtalk.com/robot/send?access_token=5b6aa267b4e3c954e995a3fc5286c540d4261b835eed754dabef2b933b4fb02a"  # Example: "https://oapi.dingtalk.com/robot/send?access_token=your_access_token"
+
   # The DingDing robot secret used to generate the signature for secure notifications.
-  secret: ""  # Example: "your_sign_secret"
+  secret: "SEC91b409df60966f4d122fe142d258045e0685fc270cca92247679ae41f3e2739f"  # Example: "your_sign_secret"
