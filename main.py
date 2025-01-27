@@ -24,7 +24,7 @@ def loadConfig(configPath='config/config.yaml'):
     try:
         with open(configPath, 'r') as file:
             config = yaml.safe_load(file)
-        required_keys = ['exchange', 'Zone', 'cronTasks', 'queryInterval','symbolsFilePath', 'defaultTimeframe', 'defaultThreshold', 'notificationChannels']
+        required_keys = ['exchange', 'Zone', 'cronTasks', 'queryInterval','symbolsFilePath', 'defaultTimeframe', 'defaultThreshold', 'quantity', 'notificationChannels']
         for key in required_keys:
             if key not in config:
                 raise ValueError(f"Missing required config key: {key}")

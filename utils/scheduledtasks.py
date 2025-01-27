@@ -3,6 +3,7 @@ import logging
 from datetime import datetime
 from utils.parsetime import parseTimeframe, parseTime
 from utils.log import Log
+from utils.message import getMessage
 from notifications.dingding import sendDingDingMessage
 from notifications.telegram import sendTelegramMessage
 
@@ -17,8 +18,8 @@ async def main_async(symbols, exchange, config,times):
     try:
         tasks = [fetch_result(symbol, exchange, times, i) for i, symbol in enumerate(symbols)]
         results = await asyncio.gather(*tasks, return_exceptions=True)
+        data = []
 
-        message = f"The price has changed by more than {config['defaultThreshold']}% in the past {config['defaultTimeframe']}:"
         write = False
         for result in results:
             if isinstance(result, Exception):
@@ -26,12 +27,14 @@ async def main_async(symbols, exchange, config,times):
                 logging.error(f"Task failed：{result}")
             else:
                 if result:
+                    data.append(result)
                     write = True
-                    message += result
-        
-        message += f"\n{times['localTime']}"
         
         if write:
+            message = f"The price has changed by more than {config['defaultThreshold']}% in the past {config['defaultTimeframe']}:"
+            message += getMessage(config['quantity'], data)
+            message += f"\n{times['localTime']}"
+            
             sendTelegramMessage(message, config['telegram']['token'], config['telegram']['chatId'])
             sendDingDingMessage(message, config['dingding']['webhook'], config['dingding']['secret'])
             Log(message+'\n')

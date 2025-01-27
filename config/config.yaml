@@ -20,11 +20,15 @@ queryInterval: "5m"
 
 # The default timeframe (frequency of data retrieval).
 # Possible values: "1m", "5m", "15m", "1h", "1d".
-defaultTimeframe: "5m"  # Example: "5m"
+defaultTimeframe: "1d"  # Example: "5m"
 
 # The default price change threshold. Only pairs exceeding this value will be notified.
 # Here 1 is equivalent to 1%
 defaultThreshold: 1  # Example: 1
+
+# Returns the maximum number of currencies
+# Note: It must be an integer greater than 0
+quantity: 5 
 
 # The file path containing trading pair symbols. If empty, pairs will be auto-retrieved.
 symbolsFilePath: "config/symbols.txt"  # Example: "config/symbols.txt"

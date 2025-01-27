@@ -14,7 +14,7 @@ class Exchange:
             
             increase = ((close_price - open_price) / open_price) * 100
             if abs(increase) >= self.threshold:
-                return f"\nSymbol: {symbol}, Price Change: {increase:.2f}%"
+                return [symbol, round(increase,2)]
             else:
                 return None
         except Exception as e:
