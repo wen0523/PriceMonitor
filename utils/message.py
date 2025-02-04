@@ -1,6 +1,6 @@
 def getMessage(limit,data):
     message = ''
-    sorted_data = sorted(data, key=lambda x: x[1])
+    sorted_data = sorted(data, key=lambda x: abs(x[1]), reverse=True)
     
     if limit > len(data):
         limit = len(data)
