@@ -8,7 +8,7 @@ from utils.scheduledtasks import periodic_task
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # Get currency
-def loadSymbol(configPath='config/symbols.txt'):
+def loadSymbol(configPath):
     try:
         currency = []
         with open(configPath, 'r') as file:
@@ -38,7 +38,7 @@ def main():
     try:
         config = loadConfig()
 
-        symbols = loadSymbol(config['symbolsFilePath'])
+        symbols = loadSymbol(config['symbolsFilePath'] + '_' + config['exchange'] +'.txt')
         if not symbols:
             logging.error("No symbols found in the specified file.")
             return
